@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>che.js demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link rel="stylesheet" href="main.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+
+
+    <div class="fixed-action-btn">
+        <a href="#" class="btn-floating btn-large red sidenav-trigger" data-target="slide-out">
+            <i class="large material-icons">settings</i>
+        </a>
+        <!-- <ul>
+            <li><a class="btn-floating red"><i class="material-icons">insert_chart</i></a></li>
+            <li><a class="btn-floating yellow darken-1"><i class="material-icons">format_quote</i></a></li>
+            <li><a class="btn-floating green"><i class="material-icons">publish</i></a></li>
+            <li><a class="btn-floating blue"><i class="material-icons">attach_file</i></a></li>
+        </ul> -->
+    </div>
+    <ul id="slide-out" class="sidenav">
+        <!-- <li><a id="setCameraPos" class="waves-effect waves-light btn">Mudar posição da camera</a></li> -->
+        <li>
+            <p>Vertex Count: <span id="vertexCount">0</span></p>
+            <p>Triangle Count: <span id="triangleCount">0</span></p>
+        </li>
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a class="subheader">Paint</a></li>
+        <li><a id="paintCompound" class="waves-effect waves-light btn">Connected Compounds</a></li>
+        <li><a id="paintVertexTriangleStarButton" class="waves-effect waves-light btn">Vertex Triangle Star</a></li>
+        <!-- <li><a id="paintStarButton" class="waves-effect waves-light btn">Triangle Star of Triangle</a></li> -->
+        <li><a id="paintTriangleTriangleStarButton" class="waves-effect waves-light btn">Triangle Triangle Star</a>
+        </li>
+        <!-- {% comment %} <li style="padding: 1vw;">
+            Pintar estrela do vertice
+            <form action="#">
+                <p class="range-field">
+                    <input type="range" id="vertexPicker" min="1" max="100" />
+                </p>
+            </form>
+        </li> {% endcomment %} -->
+    </ul>
+    <!-- <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a> -->
+
+
+    <script src="main.js"></script>
+    <script src="ui.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</body>
+
+</html>

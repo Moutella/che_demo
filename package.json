@@ -1,0 +1,26 @@
+{
+  "name": "che_demo",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "webpack && serve dist",
+    "deploy": "webpack && node deploy.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "copy-webpack-plugin": "^9.0.1",
+    "gh-pages": "^3.2.3",
+    "serve": "^12.0.0",
+    "webpack": "^5.45.1",
+    "webpack-cli": "^4.7.2"
+  },
+  "dependencies": {
+    "che.js": "github:Moutella/che.js",
+    "three": "^0.130.1"
+  }
+}

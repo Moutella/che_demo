@@ -29,22 +29,26 @@
     <ul id="slide-out" class="sidenav">
         <!-- <li><a id="setCameraPos" class="waves-effect waves-light btn">Mudar posição da camera</a></li> -->
         <li>
-            <p>Número de vertices: <span id="vertexcount">0</span></p>
+            <p>Vertex Count: <span id="vertexCount">0</span></p>
+            <p>Triangle Count: <span id="triangleCount">0</span></p>
         </li>
-        <li><a id="paintCompound" class="waves-effect waves-light btn">Pintar conexos</a></li>
-        <li style="padding: 1vw;">
+        <li>
+            <div class="divider"></div>
+        </li>
+        <li><a class="subheader">Paint</a></li>
+        <li><a id="paintCompound" class="waves-effect waves-light btn">Connected Compounds</a></li>
+        <li><a id="paintVertexTriangleStarButton" class="waves-effect waves-light btn">Vertex Triangle Star</a></li>
+        <li><a id="paintStarButton" class="waves-effect waves-light btn">Triangle Star of Triangle</a></li>
+        <li><a id="paintTriangleTriangleStarButton" class="waves-effect waves-light btn">Triangle Triangle Star</a>
+        </li>
+        <!-- {% comment %} <li style="padding: 1vw;">
             Pintar estrela do vertice
             <form action="#">
                 <p class="range-field">
                     <input type="range" id="vertexPicker" min="1" max="100" />
                 </p>
             </form>
-        </li>
-        <li>
-            <div class="divider"></div>
-        </li>
-        <li><a class="subheader">Subheader</a></li>
-        <li><a class="waves-effect" href="#!">Third Link With Waves</a></li>
+        </li> {% endcomment %} -->
     </ul>
     <!-- <a href="#" data-target="slide-out" class="sidenav-trigger"><i class="material-icons">menu</i></a> -->
 

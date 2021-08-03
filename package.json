@@ -20,7 +20,7 @@
     "webpack-cli": "^4.7.2"
   },
   "dependencies": {
-    "che.js": "github:Moutella/che.js",
+    "@che.js/che": "^1.0.1",
     "three": "^0.130.1"
   }
 }

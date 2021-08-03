@@ -1,4 +1,4 @@
-import Che from 'che.js';
+import Che from '@che.js/che';
 import * as THREE from 'three';
 
 

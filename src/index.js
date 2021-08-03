@@ -89,14 +89,14 @@ document.querySelector("#paintVertexTriangleStarButton").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
-    che.paintVertexStar(vertexId)
+    che.paintVertexStar(vertexId - 1)
   }
 )
 
 document.querySelector("#paintTriangleTriangleStarButton").addEventListener(
   'click',
   function () {
-    let triangleId = parseInt(prompt("Choose the triangleId you want to paint the star"))
-    che.paintTriangleStar(triangleId)
+    let triangleId = parseInt(prompt("Choose the triangle you want to paint the star"))
+    che.paintTriangleStar(triangleId - 1)
   }
 )

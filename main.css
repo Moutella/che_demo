@@ -2,17 +2,13 @@
   margin: 0 !important;
 }
 
-/* #scene3d {
-  height: 100vh;
-  padding: 0 !important;
-} */
-
-#controls {
+#float_menu {
   position: absolute;
   bottom: 3vh;
   right: 3vw;
 }
 
-.sidenav-overlay {
-  opacity: 0 !important;
+.btn {
+  width: 100%;
+  margin-bottom: 0.5vh;
 }

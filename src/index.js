@@ -62,8 +62,15 @@ async function load_che(filename) {
   animate();
 }
 
-load_che('plys/sphere.ply')
-const files = ['cone', 'example', 'sphere', 'teste']
+load_che('plys/teapot.ply')
+const files = ['teapot.ply', 'cone.ply', 'sphere.ply', 'chopper.ply', 'shoe.ply']
+let select = document.querySelector("#ply_select")
+for (let file of files) {
+  let option = document.createElement("option")
+  option.text = file.split('.')[0]
+  option.value = file
+  select.add(option)
+}
 
 function resetScene() {
   scene.clear()
@@ -100,3 +107,10 @@ document.querySelector("#paintTriangleTriangleStarButton").addEventListener(
     che.paintTriangleStar(triangleId - 1)
   }
 )
+
+select.addEventListener('change', () => {
+  while (scene.children.length > 0) {
+    scene.remove(scene.children[0]);
+  }
+  load_che(`plys/${select.value}`)
+})

@@ -1,69 +1,36 @@
 import * as THREE from 'three';
-import CHE_, {
+import {
   CHE_THREE
 } from './che_three'
+
 import {
-  OrbitControls
-} from './OrbitControls';
-const rendererElement = document.querySelector("body")
+  World
+} from './world'
 
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(
-  75,
-  window.innerWidth / window.innerHeight,
-  0.1,
-  1000);
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth, window.innerHeight);
-rendererElement.appendChild(renderer.domElement);
-camera.position.z = 8;
-
-
-
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.listenToKeyEvents(window);
-controls.keys = {
-  LEFT: 'KeyA', //left arrow
-  UP: 'KeyW', // up arrow
-  RIGHT: 'KeyD', // right arrow
-  BOTTOM: 'KeyS' // down arrow
-}
-
-function setCameraZ(position) {
-  camera.position.z = position
-}
-
-
-const che = new CHE_THREE();
+const world = new World()
+world.setCameraPos(0, 0, 8);
+let che = null;
 
 async function load_che(filename) {
+
+  che = new CHE_THREE(world);
+  window.che = che;
   await che.loadPly(filename)
   document.querySelector("#vertexCount").textContent = che.vertexCount
   document.querySelector("#triangleCount").textContent = che.triangleCount
   che.loadLevel1()
   che.createMesh()
 
-  let mesh = che.mesh;
-  scene.add(mesh);
+  che.addMesh();
 
-  function animate() {
-    requestAnimationFrame(animate);
-    // mesh.rotation.x += 0.01;
-    // mesh.rotation.y += 0.02;
-    controls.update();
-    renderer.render(scene, camera);
-  }
-  var geo = new THREE.WireframeGeometry(mesh.geometry); // or 
-  var mat = new THREE.LineBasicMaterial({
-    color: 0xffffff
-  });
-  var wireframe = new THREE.LineSegments(geo, mat);
-  mesh.add(wireframe);
+
+
   animate();
 }
 
-load_che('plys/teapot.ply')
-const files = ['teapot.ply', 'cone.ply', 'sphere.ply', 'chopper.ply', 'shoe.ply']
+
+load_che('plys/sphere.ply')
+const files = ['sphere.ply', 'teapot.ply', 'cone.ply', 'chopper.ply', 'shoe.ply', 'bunny.ply']
 let select = document.querySelector("#ply_select")
 for (let file of files) {
   let option = document.createElement("option")
@@ -83,20 +50,21 @@ document.querySelector("#paintCompound").addEventListener(
     console.log("paintCompounds")
   }
 )
-// document.querySelector("#vertexPicker").addEventListener(
-//   'input',
-//   function (event) {
-//     let vertexId = document.querySelector("#vertexPicker").value
-//     che.paintStar(vertexId - 1)
-//   }
-// )
-
 
 document.querySelector("#paintVertexTriangleStarButton").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
-    che.paintVertexStar(vertexId - 1)
+    che.paintR02(vertexId - 1)
+  }
+)
+
+
+document.querySelector("#paintEdgeTriangleStarButton").addEventListener(
+  'click',
+  function () {
+    let halfEdgeId = parseInt(prompt("Choose the half-edge you want to paint the star"))
+    che.paintR12(halfEdgeId - 1)
   }
 )
 
@@ -104,13 +72,64 @@ document.querySelector("#paintTriangleTriangleStarButton").addEventListener(
   'click',
   function () {
     let triangleId = parseInt(prompt("Choose the triangle you want to paint the star"))
-    che.paintTriangleStar(triangleId - 1)
+    che.paintR22(triangleId - 1)
   }
 )
 
 select.addEventListener('change', () => {
-  while (scene.children.length > 0) {
-    scene.remove(scene.children[0]);
-  }
+  world.clearScene()
+  document.querySelector("#enableVertexObj").checked = false
+  document.querySelector("#enableEdgeObj").checked = false
   load_che(`plys/${select.value}`)
 })
+
+window.addEventListener('resize', onWindowResize);
+
+function onWindowResize() {
+  world.camera.aspect = window.innerWidth / window.innerHeight;
+  world.camera.updateProjectionMatrix();
+
+  world.renderer.setSize(window.innerWidth, window.innerHeight);
+
+}
+
+window.world = world
+document.querySelector("#enableTriangleObj").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.addMesh();
+    } else {
+      che.removeMesh();
+    }
+  }
+)
+
+document.querySelector("#enableEdgeObj").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.addEdges();
+    } else {
+      che.removeEdges();
+    }
+  }
+)
+document.querySelector("#enableVertexObj").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.addVertex();
+    } else {
+      che.removeVertex();
+    }
+  }
+)
+
+function animate() {
+  requestAnimationFrame(animate);
+  // mesh.rotation.x += 0.01;
+  // mesh.rotation.y += 0.02;
+  world.controls.update();
+  world.renderer.render(world.scene, world.camera);
+}

@@ -19,6 +19,7 @@ export class CHE_THREE {
     this._meshObject = null;
     this._edgeObject = null;
     this._vertexObject = null;
+    this._halfEdgeObject = null;
 
     this._edgeList = [];
     this._paintedTriangles = []
@@ -251,6 +252,7 @@ export class CHE_THREE {
 
 
   createEdgeObjects() {
+    console.log(this._edgeList)
     const edgeGeometry = new THREE.BufferGeometry().setFromPoints(this._edgeList)
     edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
       this._edgeColorList, 3
@@ -362,6 +364,61 @@ export class CHE_THREE {
     }
 
     this._edgeObject.geometry.attributes.instanceColorEnd.needsUpdate = true
+  }
+
+  createHalfEdge(he, r, g, b) {
+
+    let heStart = this._che.getVertex(this._che.getHalfEdgeVertex(he));
+    let heEnd = this._che.getVertex(this.che.getHalfEdgeVertex(this._che.nextHalfEdge(he)));
+
+    let tri1center = this._che.getTriangleCenter(this._che.triangle(he))
+
+    let heStartVertex = this.vertexToVector3(heStart)
+    let endVertex = this.vertexToVector3(heEnd)
+    let centerVertex = this.vertexToVector3(tri1center)
+
+
+
+    let centerVectorFromStart = centerVertex.clone().sub(heStartVertex)
+    let centerVectorFromEnd = centerVertex.clone().sub(endVertex)
+
+    let heEndVertex = endVertex.clone().add(centerVectorFromEnd.clone().divideScalar(5))
+    heStartVertex.add(centerVectorFromStart.clone().divideScalar(5))
+
+    let edgeSize = heStartVertex.clone().sub(heEndVertex).divideScalar(4).length();
+    let halfEdgeArrowVertex = heEndVertex.clone().add(centerVectorFromEnd.clone().multiplyScalar(edgeSize))
+
+
+
+
+
+
+    let segmentHe = [
+      heStartVertex,
+      heEndVertex,
+      heEndVertex,
+      halfEdgeArrowVertex
+    ]
+    console.log(segmentHe)
+    const edgeGeometry = new THREE.BufferGeometry().setFromPoints(segmentHe)
+    // edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
+    //   this._edgeColorList, 3
+    // ))
+    let lineGeometry = new LineSegmentsGeometry().setPositions(edgeGeometry.attributes.position.array)
+    // lineGeometry.setColors(edgeGeometry.attributes.color.array)
+    var lineMaterial = new LineMaterial({
+      color: new THREE.Color(r, g, b),
+      linewidth: 15,
+      dashed: false,
+      alphaToCoverage: true,
+    });
+
+    lineMaterial.resolution.set(window.innerWidth, window.innerHeight); // important, for now...
+
+    this._halfEdgeObject = new LineSegments2(lineGeometry, lineMaterial);
+    this._world.scene.add(this._halfEdgeObject);
+
+
   }
 
   // paintEdge(he, r, g, b) {

@@ -24,8 +24,10 @@
                             id="triangleCount">0</span>
                     </p>
                     <div class="switch">
-                        <label><i class="material-icons">change_history</i>
-                            Off <input id="enableTriangleObj" type="checkbox" checked>
+                        <label><span class="material-icons">
+                                change_history
+                            </span>
+                            Off <input id="enableTriangleObj" type="checkbox" checked autocomplete="off">
                             <span class="lever"></span>
                             On
                         </label>
@@ -34,7 +36,7 @@
                         <i class="material-icons">horizontal_rule</i>
                         <label>
                             Off
-                            <input id="enableEdgeObj" type="checkbox">
+                            <input id="enableEdgeObj" type="checkbox" autocomplete="off">
                             <span class="lever"></span>
                             On
                         </label>
@@ -44,7 +46,8 @@
                         <i class="material-icons">fiber_manual_record</i>
                         <label>
                             Off
-                            <input id="enableVertexObj" type="checkbox">
+                            <input id="enableVertexObj" type="checkbox" autocomplete="off" autocomplete="off"
+                                autocomplete="off">
                             <span class="lever"></span>
                             On
                         </label>
@@ -60,16 +63,31 @@
             <div class="card blue-grey darken-1">
                 <div class="card-content white-text">
                     <span class="card-title">
-                        R*2
+                        Relations
                     </span>
-                    <p class="center-align">Vertex Count: <span id="vertexCount">0</span> Triangle Count: <span
-                            id="triangleCount">0</span>
-                    </p>
 
                     <a id="paintCompound" class="waves-effect waves-light btn">Compounds</a>
-                    <a id="paintVertexTriangleStarButton" class="waves-effect waves-light btn">R02</a>
-                    <a id="paintEdgeTriangleStarButton" class="waves-effect waves-light btn">R12</a>
-                    <a id="paintTriangleTriangleStarButton" class="waves-effect waves-light btn">R22</a>
+                    <a id="paintR00button" class="waves-effect waves-light btn"><i
+                            class="material-icons">fiber_manual_record</i> R00 <i
+                            class="material-icons">fiber_manual_record</i>
+                    </a>
+                    <a id="paintR10button" class="waves-effect waves-light btn"><i
+                            class="material-icons">horizontal_rule</i> R10 <i
+                            class="material-icons">fiber_manual_record</i></a>
+
+                    <a id="paintR02button" class="waves-effect waves-light btn"><i
+                            class="material-icons">fiber_manual_record</i> R02 <span class="material-icons">
+                            change_history
+                        </span></a>
+                    <a id="paintR12button" class="waves-effect waves-light btn"><i
+                            class="material-icons">horizontal_rule</i> R12 <span class="material-icons">
+                            change_history
+                        </span></a>
+                    <a id="paintR22button" class="waves-effect waves-light btn"><span class="material-icons">
+                            change_history
+                        </span> R22 <span class="material-icons">
+                            change_history
+                        </span></a>
 
                 </div>
 

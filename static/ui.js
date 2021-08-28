@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', function () {
   var instances = M.Sidenav.init(elems, options);
 });
 
-console.log("hmmm")
-
 
 document.addEventListener('DOMContentLoaded', function () {
   var elems = document.querySelectorAll('.fixed-action-btn');

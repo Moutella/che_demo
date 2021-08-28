@@ -1,18 +1,32 @@
 import Che from '@che.js/che.js';
+//import Che from '../../../che.js'
 import * as THREE from 'three';
-
+import {
+  LineMaterial
+} from 'three/examples/jsm/lines/LineMaterial'
+import {
+  LineSegments2
+} from 'three/examples/jsm/lines/LineSegments2'
+import {
+  LineSegmentsGeometry
+} from 'three/examples/jsm/lines/LineSegmentsGeometry'
 
 
 export class CHE_THREE {
   constructor(world) {
     this._che = new Che()
+
     this._meshObject = null;
     this._edgeObject = null;
     this._vertexObject = null;
+
     this._edgeList = [];
     this._paintedTriangles = []
     this._paintedEdges = []
     this._paintedVertex = []
+
+    this._edgeMap = new Map()
+
     this._world = world;
   }
 
@@ -50,12 +64,21 @@ export class CHE_THREE {
     this._che.loadCheL3()
   }
 
+  paintR00(vertexId) {
+    this.clearPainted()
+    this.paintVertex(vertexId, 0, 1, 0);
+    this._paintedVertex.push(vertexId);
+    let r00vertex = this.che.relation00(vertexId);
+    r00vertex.map(
+      (vertex) => {
+        this.paintVertex(vertex, 230, 0, 126)
+      }
+    )
+    this._paintedVertex.push(...r00vertex)
+  }
 
   paintR02(vertexId) {
     this.clearPainted()
-    for (let paintedTriangle of this._paintedTriangles) {
-      this.paintTriangle(paintedTriangle, 1, 0, 0)
-    }
     this.paintVertex(vertexId, 0, 1, 0);
     this._paintedVertex.push(vertexId);
     let starOfVertex = this.che.relation02(vertexId)
@@ -69,10 +92,27 @@ export class CHE_THREE {
 
   }
 
-  paintR12(halfEdgeId) {
+  paintR10(halfEdgeId) {
     this.clearPainted()
 
     this.paintEdge(halfEdgeId, 0, 1, 0);
+    this._paintedEdges.push(halfEdgeId);
+    let starOfEdge = this.che.relation10(halfEdgeId)
+
+    starOfEdge.map(
+      (vertex) => {
+        this.paintVertex(vertex, 0, 0, 1);
+      }
+    )
+
+    this._paintedVertex.push(...starOfEdge);
+
+  }
+
+  paintR12(halfEdgeId) {
+    this.clearPainted()
+
+    this.paintEdge(halfEdgeId, 230, 0, 126);
     this._paintedEdges.push(halfEdgeId);
     let starOfHE = this.che.relation12(halfEdgeId)
 
@@ -88,7 +128,6 @@ export class CHE_THREE {
 
   paintR22(triangleId) {
     this.clearPainted()
-
     let starOf1 = this.che.relation22(triangleId)
     this._paintedTriangles.push(triangleId);
     this.paintTriangle(triangleId, 0, 1, 0)
@@ -165,7 +204,11 @@ export class CHE_THREE {
 
 
         let oppositeHalfEdge = this.che.getOppositeHalfEdge(halfEdge);
-        if (oppositeHalfEdge == -1 || oppositeHalfEdge > this._edgeList.length / 2) {
+        if (oppositeHalfEdge != -1) {
+          halfEdge = Math.min(halfEdge, oppositeHalfEdge)
+        }
+
+        if (oppositeHalfEdge == -1 || !this._edgeMap.has(halfEdge)) {
           let nextHalfEdge = this.che.nextHalfEdge(halfEdge);
           let nextHalfEdgeVertex = this.che.getHalfEdgeVertex(nextHalfEdge)
           let nextVertex = this.che.level0._tableGeometry[nextHalfEdgeVertex];
@@ -173,7 +216,14 @@ export class CHE_THREE {
             this.vertexToVector3(vertex),
             this.vertexToVector3(nextVertex)
           );
-          this._edgeColorList.push(0.25, 0.25, 0.25, 0.25, 0.25, 0.25)
+
+          this._edgeMap.set(halfEdge, this._paintedEdges.length)
+          this._edgeColorList.push(1, 1, 1, 1, 1, 1)
+
+          if (oppositeHalfEdge != -1) {
+            halfEdge = Math.min(halfEdge, oppositeHalfEdge)
+          }
+
           this._paintedEdges.push(halfEdge);
         }
 
@@ -205,11 +255,42 @@ export class CHE_THREE {
     edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
       this._edgeColorList, 3
     ))
-    const lineMat = new THREE.LineBasicMaterial({
-      vertexColors: true
-    })
-    this._edgeObject = new THREE.LineSegments(edgeGeometry, lineMat)
+    // const lineMat = new THREE.LineBasicMaterial({
+    //   vertexColors: true,
+    //   linewidth: 5
+    // })
+    let lineGeometry = new LineSegmentsGeometry().setPositions(edgeGeometry.attributes.position.array)
+    lineGeometry.setColors(edgeGeometry.attributes.color.array)
+    // lineGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
+    //   this._edgeColorList, 3
+    // ))
+    var lineMaterial = new LineMaterial({
+      color: 0xffffff,
+      linewidth: 5, // in world units with size attenuation, pixels otherwise
+      vertexColors: true,
+
+      //resolution:  // to be set by renderer, eventually
+      dashed: false,
+      alphaToCoverage: true,
+    });
+
+    lineMaterial.resolution.set(window.innerWidth, window.innerHeight); // important, for now...
+
+    this._edgeObject = new LineSegments2(lineGeometry, lineMaterial);
+
+    //  = new THREE.LineSegments(edgeGeometry, lineMat)
   }
+
+  // createEdgeObjects() {
+  //   const edgeGeometry = new THREE.BufferGeometry().setFromPoints(this._edgeList)
+  //   edgeGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
+  //     this._edgeColorList, 3
+  //   ))
+  //   const lineMat = new THREE.LineBasicMaterial({
+  //     vertexColors: true
+  //   })
+  //   this._edgeObject = new THREE.LineSegments(edgeGeometry, lineMat)
+  // }
 
   createVertexObject() {
     let threeVertices = []
@@ -270,14 +351,32 @@ export class CHE_THREE {
     if (oppositeHe != -1) {
       he = Math.min(he, oppositeHe)
     }
+    let edgeId = this._edgeMap.get(he);
     for (let i = 0; i < 2; i++) {
-      this._edgeObject.geometry.attributes.color.array[he * 6 + i * 3] = r
-      this._edgeObject.geometry.attributes.color.array[he * 6 + 1 + i * 3] = g
-      this._edgeObject.geometry.attributes.color.array[he * 6 + 2 + i * 3] = b
+      this._edgeObject.geometry.attributes.instanceColorStart.array[edgeId * 6 + i * 3] = r
+      this._edgeObject.geometry.attributes.instanceColorStart.array[edgeId * 6 + 1 + i * 3] = g
+      this._edgeObject.geometry.attributes.instanceColorStart.array[edgeId * 6 + 2 + i * 3] = b
+      // this._edgeObject.geometry.attributes.instanceColorEnd.array[he * 6 + i * 3] = r
+      // this._edgeObject.geometry.attributes.instanceColorEnd.array[he * 6 + 1 + i * 3] = g
+      // this._edgeObject.geometry.attributes.instanceColorEnd.array[he * 6 + 2 + i * 3] = b
     }
 
-    this._edgeObject.geometry.attributes.color.needsUpdate = true
+    this._edgeObject.geometry.attributes.instanceColorEnd.needsUpdate = true
   }
+
+  // paintEdge(he, r, g, b) {
+  //   let oppositeHe = this.che.getOppositeHalfEdge(he)
+  //   if (oppositeHe != -1) {
+  //     he = Math.min(he, oppositeHe)
+  //   }
+  //   for (let i = 0; i < 2; i++) {
+  //     this._edgeObject.geometry.attributes.color.array[he * 6 + i * 3] = r
+  //     this._edgeObject.geometry.attributes.color.array[he * 6 + 1 + i * 3] = g
+  //     this._edgeObject.geometry.attributes.color.array[he * 6 + 2 + i * 3] = b
+  //   }
+
+  //   this._edgeObject.geometry.attributes.color.needsUpdate = true
+  // }
   addMesh() {
     this._world.scene.add(this._meshObject);
   }
@@ -312,7 +411,7 @@ export class CHE_THREE {
     }
     this._paintedTriangles = []
     for (let paintedEdge of this._paintedEdges) {
-      this.paintEdge(paintedEdge, 0, 0, 0)
+      this.paintEdge(paintedEdge, 1, 1, 1)
     }
     this._paintedEdges = []
     for (let paintedVertex of this._paintedVertex) {

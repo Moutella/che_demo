@@ -15,7 +15,8 @@ async function load_che(filename) {
 
   che = new CHE_THREE(world);
   window.che = che;
-  await che.loadPly(filename)
+  let ply = await fetch(filename);
+  await che.loadPly(ply)
   document.querySelector("#vertexCount").textContent = che.vertexCount
   document.querySelector("#triangleCount").textContent = che.triangleCount
   che.loadLevel1()
@@ -47,11 +48,28 @@ document.querySelector("#paintCompound").addEventListener(
   'click',
   function (event) {
     che.paintCompounds()
-    console.log("paintCompounds")
   }
 )
 
-document.querySelector("#paintVertexTriangleStarButton").addEventListener(
+
+document.querySelector("#paintR00button").addEventListener(
+  'click',
+  function () {
+    let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
+    che.paintR00(vertexId - 1)
+  }
+)
+
+
+document.querySelector("#paintR10button").addEventListener(
+  'click',
+  function () {
+    let heId = parseInt(prompt("Choose the half-edge"))
+    che.paintR10(heId - 1)
+  }
+)
+
+document.querySelector("#paintR02button").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
@@ -60,7 +78,7 @@ document.querySelector("#paintVertexTriangleStarButton").addEventListener(
 )
 
 
-document.querySelector("#paintEdgeTriangleStarButton").addEventListener(
+document.querySelector("#paintR12button").addEventListener(
   'click',
   function () {
     let halfEdgeId = parseInt(prompt("Choose the half-edge you want to paint the star"))
@@ -68,7 +86,7 @@ document.querySelector("#paintEdgeTriangleStarButton").addEventListener(
   }
 )
 
-document.querySelector("#paintTriangleTriangleStarButton").addEventListener(
+document.querySelector("#paintR22button").addEventListener(
   'click',
   function () {
     let triangleId = parseInt(prompt("Choose the triangle you want to paint the star"))

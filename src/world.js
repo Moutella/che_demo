@@ -36,7 +36,26 @@ export class World {
       60,
       window.innerWidth / window.innerHeight,
       0.1,
-      1000);
+      10000);
+  }
+
+  createLights() {
+
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, .7);
+    directionalLight.position.x = .35
+    directionalLight.position.y = .35
+    directionalLight.position.z = .75
+    this._scene.add(directionalLight);
+
+    const directionalLight2 = new THREE.DirectionalLight(0xffffff, 0.3);
+    directionalLight2.position.x = -directionalLight.position.x
+    directionalLight2.position.y = -directionalLight.position.y
+    directionalLight2.position.z = -directionalLight.position.z
+    this._scene.add(directionalLight2);
+
+    this._scene.add(new THREE.AmbientLight(0xffffff, 0.3))
+
   }
   createRenderer() {
     const rendererElement = document.querySelector("body")
@@ -54,6 +73,9 @@ export class World {
       RIGHT: 'KeyD', // right arrow
       BOTTOM: 'KeyS' // down arrow
     }
+    this._controls.enablePan = true;
+    this._controls.enableRotate = false;
+    this._controls.mouseButtons = {}
   }
 
   setCameraPos(x, y, z) {

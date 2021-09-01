@@ -19,19 +19,18 @@ async function load_che(filename) {
   await che.loadPly(ply)
   document.querySelector("#vertexCount").textContent = che.vertexCount
   document.querySelector("#triangleCount").textContent = che.triangleCount
+  document.querySelector("#heCount").textContent = che.triangleCount * 3
   che.loadLevel1()
   che.createMesh()
-
   che.addMesh();
-
-
-
+  che.createControls();
+  world.createLights();
   animate();
 }
 
 
 load_che('plys/sphere.ply')
-const files = ['sphere.ply', 'teapot.ply', 'cone.ply', 'chopper.ply', 'shoe.ply', 'bunny.ply']
+const files = ['sphere.ply', 'opensphere.ply', 'teapot.ply', 'cone.ply', 'chopper.ply', 'shoe.ply', 'bunny.ply', 'venusmilo.ply']
 let select = document.querySelector("#ply_select")
 for (let file of files) {
   let option = document.createElement("option")
@@ -65,7 +64,7 @@ document.querySelector("#paintR10button").addEventListener(
   'click',
   function () {
     let heId = parseInt(prompt("Choose the half-edge"))
-    che.paintR10(heId - 1)
+    che.paintR10(heId)
   }
 )
 
@@ -73,7 +72,7 @@ document.querySelector("#paintR02button").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
-    che.paintR02(vertexId - 1)
+    che.paintR02(vertexId)
   }
 )
 
@@ -82,7 +81,7 @@ document.querySelector("#paintR12button").addEventListener(
   'click',
   function () {
     let halfEdgeId = parseInt(prompt("Choose the half-edge you want to paint the star"))
-    che.paintR12(halfEdgeId - 1)
+    che.paintR12(halfEdgeId)
   }
 )
 
@@ -90,14 +89,26 @@ document.querySelector("#paintR22button").addEventListener(
   'click',
   function () {
     let triangleId = parseInt(prompt("Choose the triangle you want to paint the star"))
-    che.paintR22(triangleId - 1)
+    console.time('r22')
+    let start = performance.now()
+    che.paintR22(triangleId)
+    console.timeEnd('r22')
+    let end = performance.now()
+    console.log(`Tempo R22: ${end - start}`)
   }
 )
 
 select.addEventListener('change', () => {
   world.clearScene()
+  document.querySelector("#enableTriangleObj").checked = true
   document.querySelector("#enableVertexObj").checked = false
   document.querySelector("#enableEdgeObj").checked = false
+  document.querySelector("#enablePhong").checked = false
+  che.cleanL1();
+  che.cleanL2();
+  che.cleanL3();
+  che = null;
+
   load_che(`plys/${select.value}`)
 })
 
@@ -144,10 +155,77 @@ document.querySelector("#enableVertexObj").addEventListener(
   }
 )
 
+
+document.querySelector("#enablePhong").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.setPhongMaterial();
+    } else {
+      che.setBasicMaterial();
+    }
+  }
+)
+
+let halfEdgeId = 0
+document.querySelector("#paintHe").addEventListener(
+  'click',
+  () => {
+    che.paintHalfEdges(118 / 255, 88 / 255, 152 / 255)
+    halfEdgeId = parseInt(prompt("Choose the half-edge you want to show"))
+    document.querySelector("#currentHe").textContent = halfEdgeId
+    che.createHalfEdge(halfEdgeId, 82 / 255, 208 / 255, 83 / 255)
+  }
+)
+
+document.querySelector("#paintOppositeHe").addEventListener(
+  'click',
+  () => {
+    che.paintHalfEdges(118 / 255, 88 / 255, 152 / 255)
+
+    halfEdgeId = che._che.getOppositeHalfEdge(halfEdgeId);
+    document.querySelector("#currentHe").textContent = halfEdgeId
+    che.createHalfEdge(halfEdgeId, 82 / 255, 208 / 255, 83 / 255)
+  }
+)
+
+
+document.querySelector("#paintNextHe").addEventListener(
+  'click',
+  () => {
+    che.paintHalfEdges(118 / 255, 88 / 255, 152 / 255)
+
+    halfEdgeId = che._che.nextHalfEdge(halfEdgeId);
+    document.querySelector("#currentHe").textContent = halfEdgeId
+    che.createHalfEdge(halfEdgeId, 82 / 255, 208 / 255, 83 / 255)
+  }
+)
+
+
+document.querySelector("#paintPreviousHe").addEventListener(
+  'click',
+  () => {
+    che.paintHalfEdges(118 / 255, 88 / 255, 152 / 255)
+    halfEdgeId = che._che.previousHalfEdge(halfEdgeId);
+    document.querySelector("#currentHe").textContent = halfEdgeId
+    che.createHalfEdge(halfEdgeId, 82 / 255, 208 / 255, 83 / 255)
+  }
+)
+
+
+
+document.querySelector("#clearHe").addEventListener(
+  'click',
+  () => {
+    che.removeHalfEdges();
+  }
+)
+
+
 function animate() {
   requestAnimationFrame(animate);
   // mesh.rotation.x += 0.01;
   // mesh.rotation.y += 0.02;
-  world.controls.update();
+  //world.controls.update();
   world.renderer.render(world.scene, world.camera);
 }

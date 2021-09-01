@@ -26,6 +26,9 @@ async function load_che(filename) {
   che.createControls();
   world.createLights();
   animate();
+  await che.cleanL1();
+  document.querySelector("#paintOppositeHe").disabled = true
+  world.resetCamera();
 }
 
 
@@ -105,8 +108,11 @@ select.addEventListener('change', () => {
   document.querySelector("#enableEdgeObj").checked = false
   document.querySelector("#enablePhong").checked = false
   che.cleanL1();
+  document.querySelector("#enableL1").checked = false;
   che.cleanL2();
+  document.querySelector("#enableL2").checked = false;
   che.cleanL3();
+  document.querySelector("#enableL3").checked = false;
   che = null;
 
   load_che(`plys/${select.value}`)
@@ -163,6 +169,47 @@ document.querySelector("#enablePhong").addEventListener(
       che.setPhongMaterial();
     } else {
       che.setBasicMaterial();
+    }
+  }
+)
+
+
+
+document.querySelector("#enableL1").addEventListener(
+  'change',
+  async function () {
+    if (this.checked) {
+      che.loadLevel1();
+      document.querySelector("#paintOppositeHe").disabled = false
+    } else {
+      document.querySelector("#paintOppositeHe").disabled = true
+      await che.cleanL1();
+    }
+  }
+)
+
+
+
+document.querySelector("#enableL2").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.loadLevel2();
+    } else {
+      che.cleanL2();
+    }
+  }
+)
+
+
+
+document.querySelector("#enableL3").addEventListener(
+  'change',
+  function () {
+    if (this.checked) {
+      che.loadLevel3();
+    } else {
+      che.cleanL3();
     }
   }
 )

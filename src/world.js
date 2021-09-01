@@ -87,6 +87,14 @@ export class World {
     this._camera.position.z = z
   }
 
+
+  resetCamera() {
+    this._controls.reset();
+    this.setCameraPos(0, 0, 8)
+  }
+
+
+
   clearScene() {
     while (this._scene.children.length > 0) {
       this._scene.remove(this._scene.children[0]);

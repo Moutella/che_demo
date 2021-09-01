@@ -546,8 +546,10 @@ export class CHE_THREE {
       this.paintTriangle(paintedTriangle, 1, 0, 0)
     }
     this._paintedTriangles = []
-    for (let paintedEdge of this._paintedEdges) {
-      this.paintEdge(paintedEdge, .2, .2, .2)
+    if (this._che.level1) {
+      for (let paintedEdge of this._paintedEdges) {
+        this.paintEdge(paintedEdge, .2, .2, .2)
+      }
     }
     this._paintedEdges = []
     for (let paintedVertex of this._paintedVertex) {

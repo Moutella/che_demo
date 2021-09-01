@@ -59,7 +59,10 @@ export class World {
   }
   createRenderer() {
     const rendererElement = document.querySelector("body")
-    this._renderer = new THREE.WebGLRenderer();
+    this._renderer = new THREE.WebGLRenderer({
+
+      preserveDrawingBuffer: true
+    });
     this._renderer.setSize(window.innerWidth, window.innerHeight);
     rendererElement.appendChild(this._renderer.domElement);
   }

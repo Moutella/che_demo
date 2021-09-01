@@ -4,8 +4,13 @@
 
 #float_menu {
   position: absolute;
-  bottom: 3vh;
-  right: 3vw;
+  bottom: 1vh;
+  width: 100vw;
+  pointer-events: none;
+}
+
+.float_card {
+  pointer-events: all;
 }
 
 .btn {

@@ -14,42 +14,76 @@
 <body>
 
     <div id="float_menu" class="row">
-        <div class="col s4  m4">
-            <div class="card blue-grey darken-1">
+        <div class="col s4 m2">
+            <div class="card blue-grey darken-1 float_card">
                 <div class="card-content white-text">
                     <span class="card-title">
                         <select id="ply_select" class="browser-default">
                         </select></span>
-                    <p class="center-align">Vertex Count: <span id="vertexCount">0</span> Triangle Count: <span
-                            id="triangleCount">0</span>
+                    <p class="center-align">Vertex Count: <span id="vertexCount">0</span>
+                        <br> Triangle Count: <span id="triangleCount">0</span>
+                        <br> Half-Edge Count: <span id="heCount">0</span>
                     </p>
+
+
                     <div class="switch">
-                        <label><span class="material-icons">
-                                change_history
-                            </span>
-                            Off <input id="enableTriangleObj" type="checkbox" checked autocomplete="off">
+                        <label>
+                            L1
+                            <input id="enableL1" type="checkbox" autocomplete="off">
                             <span class="lever"></span>
-                            On
                         </label>
                     </div>
+
+
                     <div class="switch">
-                        <i class="material-icons">horizontal_rule</i>
                         <label>
-                            Off
+                            L2
+                            <input id="enableL2" type="checkbox" autocomplete="off">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+
+
+                    <div class="switch">
+                        <label>
+                            L3
+                            <input id="enableL3" type="checkbox" autocomplete="off">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+
+
+                    <div class="switch">
+                        <label><span class="material-icons">change_history</span>
+                            <input id="enableTriangleObj" type="checkbox" checked autocomplete="off">
+                            <span class="lever"></span>
+                    </div>
+
+                    <div class="switch">
+                        <label>
+                            <span class="material-icons">horizontal_rule</span>
                             <input id="enableEdgeObj" type="checkbox" autocomplete="off">
                             <span class="lever"></span>
-                            On
                         </label>
                     </div>
                     <div class="switch">
 
-                        <i class="material-icons">fiber_manual_record</i>
                         <label>
-                            Off
+                            <i class="material-icons">fiber_manual_record</i>
                             <input id="enableVertexObj" type="checkbox" autocomplete="off" autocomplete="off"
                                 autocomplete="off">
                             <span class="lever"></span>
-                            On
+                        </label>
+                    </div>
+
+                    <div class="switch">
+
+                        <label>
+                            Flat
+                            <input id="enablePhong" type="checkbox" autocomplete="off" autocomplete="off"
+                                autocomplete="off">
+                            <span class="lever"></span>
+                            Phong
                         </label>
                     </div>
 
@@ -59,9 +93,17 @@
 
         </div>
 
-        <div class="col s4  m4">
+        <div class="col s4  offset-s4 m2 offset-m8">
             <div class="card blue-grey darken-1">
-                <div class="card-content white-text">
+                <div class="card-content white-text float_card">
+                    <span class="card-title">
+                        Half-Edges: <span id="currentHe">0</span>
+                    </span>
+                    <a id="paintHe" class="waves-effect waves-light btn">Show</a>
+                    <a id="paintNextHe" class="waves-effect waves-light btn">Next</a>
+                    <a id="paintPreviousHe" class="waves-effect waves-light btn">Prev</a>
+                    <a id="paintOppositeHe" class="waves-effect waves-light btn">Opposite</a>
+                    <a id="clearHe" class="waves-effect waves-light btn">Clear</a>
                     <span class="card-title">
                         Relations
                     </span>

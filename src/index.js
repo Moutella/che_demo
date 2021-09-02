@@ -33,7 +33,7 @@ async function load_che(filename) {
 
 
 load_che('plys/sphere.ply')
-const files = ['sphere.ply', 'opensphere.ply', 'teapot.ply', 'cone.ply', 'chopper.ply', 'shoe.ply', 'bunny.ply', 'venusmilo.ply']
+const files = ['sphere.ply', 'opensphere.ply', 'teapot.ply', 'cone.ply', 'chopper.ply', 'shoe.ply', 'bunny.ply', 'venusmilo.ply', 'che.ply']
 let select = document.querySelector("#ply_select")
 for (let file of files) {
   let option = document.createElement("option")

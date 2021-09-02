@@ -422,8 +422,11 @@ export class CHE_THREE {
     let centerVectorFromEnd = centerVertex.clone().sub(endVertex)
 
     let heEndVertex = endVertex.clone().add(centerVectorFromEnd.clone().divideScalar(5))
-    heStartVertex.add(centerVectorFromStart.clone().divideScalar(5))
 
+    heStartVertex.add(centerVectorFromStart.clone().divideScalar(5));
+    let auxVector = heEndVertex.clone().sub(heStartVertex)
+    heStartVertex.add(auxVector.clone().divideScalar(10));
+    heEndVertex.add(auxVector.negate().divideScalar(10));
     let halfEdgeArrowVertex = heEndVertex.clone().add(centerVectorFromEnd.divideScalar(5))
 
 

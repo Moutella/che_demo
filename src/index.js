@@ -58,7 +58,10 @@ document.querySelector("#paintR00button").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
+    let perf = performance.now()
     che.paintR00(vertexId - 1)
+    perf = performance.now() - perf
+    setPerformance(perf)
   }
 )
 
@@ -67,7 +70,10 @@ document.querySelector("#paintR10button").addEventListener(
   'click',
   function () {
     let heId = parseInt(prompt("Choose the half-edge"))
+    let perf = performance.now()
     che.paintR10(heId)
+    perf = performance.now() - perf
+    setPerformance(perf)
   }
 )
 
@@ -75,7 +81,10 @@ document.querySelector("#paintR02button").addEventListener(
   'click',
   function () {
     let vertexId = parseInt(prompt("Choose the vertex you want to paint the star"))
+    let perf = performance.now()
     che.paintR02(vertexId)
+    perf = performance.now() - perf
+    setPerformance(perf)
   }
 )
 
@@ -84,7 +93,10 @@ document.querySelector("#paintR12button").addEventListener(
   'click',
   function () {
     let halfEdgeId = parseInt(prompt("Choose the half-edge you want to paint the star"))
+    let perf = performance.now()
     che.paintR12(halfEdgeId)
+    perf = performance.now() - perf
+    setPerformance(perf)
   }
 )
 
@@ -92,12 +104,11 @@ document.querySelector("#paintR22button").addEventListener(
   'click',
   function () {
     let triangleId = parseInt(prompt("Choose the triangle you want to paint the star"))
-    console.time('r22')
-    let start = performance.now()
+    let perf = performance.now()
+
     che.paintR22(triangleId)
-    console.timeEnd('r22')
-    let end = performance.now()
-    console.log(`Tempo R22: ${end - start}`)
+    perf = performance.now() - perf
+    setPerformance(perf)
   }
 )
 
@@ -308,4 +319,8 @@ function animate() {
   // mesh.rotation.y += 0.02;
   //world.controls.update();
   world.renderer.render(world.scene, world.camera);
+}
+
+function setPerformance(time_in_ms) {
+  document.querySelector("#performance").textContent = time_in_ms
 }

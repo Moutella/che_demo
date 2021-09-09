@@ -1,5 +1,5 @@
-//import Che from '@che.js/che.js';
-import Che from '../../../che.js'
+import Che from '@che.js/che.js';
+//import Che from '../../../che.js'
 import * as THREE from 'three';
 import {
   ObjectControls

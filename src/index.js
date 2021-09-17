@@ -212,7 +212,7 @@ function enableL1() {
   che.loadLevel1();
   document.querySelector("#paintOppositeHe").disabled = false;
   document.querySelector("#enableL2").disabled = false;
-  document.querySelector("#enableL3").disabled = false;
+  document.querySelector("#enableL3").disabled = true;
   document.querySelector("#paintCompound").disabled = false;
 
 }
@@ -220,7 +220,6 @@ function enableL1() {
 async function disableL1() {
   document.querySelector("#paintOppositeHe").disabled = true
   document.querySelector("#enableL2").disabled = true;
-  document.querySelector("#enableL3").disabled = true;
   document.querySelector("#paintCompound").disabled = true;
   await che.cleanL1();
 }

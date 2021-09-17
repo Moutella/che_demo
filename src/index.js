@@ -27,9 +27,9 @@ async function load_che(filename) {
   world.createLights();
   animate();
   await che.cleanL1();
-  document.querySelector("#paintOppositeHe").disabled = true
   world.resetCamera();
 }
+
 
 
 load_che('plys/sphere.ply')
@@ -114,20 +114,31 @@ document.querySelector("#paintR22button").addEventListener(
 
 select.addEventListener('change', () => {
   world.clearScene()
+  resetHud();
+
+  load_che(`plys/${select.value}`)
+})
+
+
+function resetHud() {
+  document.querySelector("#paintOppositeHe").disabled = true
   document.querySelector("#enableTriangleObj").checked = true
   document.querySelector("#enableVertexObj").checked = false
   document.querySelector("#enableEdgeObj").checked = false
   document.querySelector("#enablePhong").checked = false
   che.cleanL1();
   document.querySelector("#enableL1").checked = false;
+  document.querySelector("#enableL1").disabled = false;
   che.cleanL2();
   document.querySelector("#enableL2").checked = false;
+  document.querySelector("#enableL2").disabled = true;
   che.cleanL3();
   document.querySelector("#enableL3").checked = false;
+  document.querySelector("#enableL3").disabled = true;
+  document.querySelector("#paintCompound").disabled = true;
   che = null;
 
-  load_che(`plys/${select.value}`)
-})
+}
 
 window.addEventListener('resize', onWindowResize);
 
@@ -190,40 +201,75 @@ document.querySelector("#enableL1").addEventListener(
   'change',
   async function () {
     if (this.checked) {
-      che.loadLevel1();
-      document.querySelector("#paintOppositeHe").disabled = false
+      enableL1();
     } else {
-      document.querySelector("#paintOppositeHe").disabled = true
-      await che.cleanL1();
+      await disableL1()
     }
   }
 )
 
+function enableL1() {
+  che.loadLevel1();
+  document.querySelector("#paintOppositeHe").disabled = false;
+  document.querySelector("#enableL2").disabled = false;
+  document.querySelector("#enableL3").disabled = false;
+  document.querySelector("#paintCompound").disabled = false;
+
+}
+
+async function disableL1() {
+  document.querySelector("#paintOppositeHe").disabled = true
+  document.querySelector("#enableL2").disabled = true;
+  document.querySelector("#enableL3").disabled = true;
+  document.querySelector("#paintCompound").disabled = true;
+  await che.cleanL1();
+}
 
 
 document.querySelector("#enableL2").addEventListener(
   'change',
   function () {
     if (this.checked) {
-      che.loadLevel2();
+      enableL2();
     } else {
-      che.cleanL2();
+      disableL2();
     }
   }
 )
 
+function enableL2() {
+  che.loadLevel2()
+  document.querySelector("#enableL1").disabled = true;
+  document.querySelector("#enableL3").disabled = false;
+}
+
+async function disableL2() {
+  che.cleanL2();
+  document.querySelector("#enableL1").disabled = false;
+  document.querySelector("#enableL3").disabled = true;
+}
 
 
 document.querySelector("#enableL3").addEventListener(
   'change',
   function () {
     if (this.checked) {
-      che.loadLevel3();
+      enableL3();
     } else {
-      che.cleanL3();
+      disableL3();
     }
   }
 )
+
+function enableL3() {
+  che.loadLevel3()
+  document.querySelector("#enableL2").disabled = true;
+}
+
+async function disableL3() {
+  che.cleanL3();
+  document.querySelector("#enableL2").disabled = false;
+}
 
 let halfEdgeId = 0
 document.querySelector("#paintHe").addEventListener(

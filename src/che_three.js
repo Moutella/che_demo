@@ -23,7 +23,7 @@ export class CHE_THREE {
     this._edgeObject = null;
     this._vertexObject = null;
     this._halfEdgeObjects = [];
-
+    this._cornerObjects = []
     this._edgeList = [];
     this._paintedTriangles = []
     this._paintedEdges = []
@@ -485,7 +485,9 @@ export class CHE_THREE {
       new ObjectControls(
         this._world.camera,
         this._world.renderer.domElement,
-        [this._meshObject, this._edgeObject, this._vertexObject].concat(this._halfEdgeObjects))
+        [this._meshObject, this._edgeObject, this._vertexObject]
+        .concat(this._halfEdgeObjects)
+        .concat(this._cornerObjects))
     this.controls.disableZoom();
     this.controls.enableVerticalRotation();
 
@@ -508,7 +510,7 @@ export class CHE_THREE {
       [this._meshObject,
         this._edgeObject,
         this._vertexObject
-      ].concat(this._halfEdgeObjects))
+      ].concat(this._halfEdgeObjects).concat(this._cornerObjects));
   }
   addMesh() {
     this._world.scene.add(this._meshObject);
@@ -561,4 +563,54 @@ export class CHE_THREE {
     this._paintedVertex = []
   }
 
+
+  createCornerHalfEdge(he, r, g, b) {
+
+    let cornerVertex = this._che.getVertex(this.che.getHalfEdgeVertex(this._che.previousHalfEdge(he)));
+    let cornerVector3 = this.vertexToVector3(cornerVertex)
+
+    let tri1center = this._che.getTriangleCenter(this._che.triangle(he))
+    let centerVector3 = this.vertexToVector3(tri1center)
+
+
+    let centerVectorFromEnd = centerVector3.clone().sub(cornerVector3)
+
+    let cornerPosition = cornerVector3.clone().add(centerVectorFromEnd.clone().divideScalar(5))
+
+    let threeVertices = []
+    let threeColors = []
+
+    const loader = new THREE.TextureLoader();
+    const texture = loader.load('text/disc.png');
+
+    threeVertices.push(cornerPosition)
+    threeColors.push(r, g, b);
+
+    const pointsGeometry = new THREE.BufferGeometry().setFromPoints(threeVertices);
+    pointsGeometry.setAttribute('color', new THREE.Float32BufferAttribute(
+      threeColors, 3
+    ))
+    const pointsMaterial = new THREE.PointsMaterial({
+      size: threeVertices.length,
+      vertexColors: true,
+      map: texture,
+      size: 0.1,
+      alphaTest: 0.5
+
+    });
+    pointsMaterial.depthTest = false;
+    let cornerObject = new THREE.Points(pointsGeometry, pointsMaterial)
+    this._cornerObjects.push(cornerObject);
+    this._world.scene.add(cornerObject);
+    cornerObject.rotation.copy(this._meshObject.rotation);
+    this.updateControls();
+  }
+
+  removeCorners() {
+    for (let cornerObject of this._cornerObjects) {
+      this._world.scene.remove(cornerObject);
+    }
+    this._cornerObjects = []
+    this.updateControls();
+  }
 }
